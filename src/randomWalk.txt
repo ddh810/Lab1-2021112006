@@ -1,2 +1,5 @@
+<<<<<<< HEAD
 a file no file no 
-Bone
+=======
+a file no file no 
+>>>>>>> C4

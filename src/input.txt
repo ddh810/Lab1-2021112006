@@ -1,3 +1,8 @@
 It is a test, and it is a file.
 no files are test is true.
-this is Bone
+<<<<<<< HEAD
+this is Cfour
+=======
+this is Cfour
+
+>>>>>>> C4

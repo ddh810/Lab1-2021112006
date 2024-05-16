@@ -1,2 +1,2 @@
 It is a test, and it is a file.
-no file is test.
+no files are test is true.

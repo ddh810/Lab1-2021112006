@@ -1,8 +1,12 @@
 It is a test, and it is a file.
 no files are test is true.
 <<<<<<< HEAD
+<<<<<<< HEAD
 this is Cfour
 =======
 this is Cfour
 
->>>>>>> C4
+>>>>>>> 2021112006`
+=======
+test Btwo
+>>>>>>> 2021112006

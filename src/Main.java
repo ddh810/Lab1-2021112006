@@ -4,20 +4,15 @@ import java.util.*;
 import java.util.List;
 
 import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxEdgeStyle;
-import com.mxgraph.view.mxStylesheet;
-import org.jgrapht.*;
 import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 import javax.swing.*;
-import javax.swing.text.Style;
 
 public class Main {
     private static Map<String, Map<String, Integer>> graph;

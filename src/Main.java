@@ -1,5 +1,23 @@
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
+
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxEdgeStyle;
+import com.mxgraph.view.mxStylesheet;
+import org.jgrapht.*;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+
+import javax.swing.*;
+import javax.swing.text.Style;
 
 public class Main {
     private static Map<String, Map<String, Integer>> graph;
@@ -29,6 +47,79 @@ public class Main {
         }
         //创建图 进入例程
         graph = CreateDirectedGraph(finalString);
+
+        SimpleDirectedWeightedGraph<String, DefaultWeightedEdge> graph1 = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+        for(Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
+            graph1.addVertex(entry.getKey());
+        }
+        for(Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
+            for(Map.Entry<String, Integer> entry1 : entry.getValue().entrySet()) {
+                DefaultWeightedEdge edge = graph1.addEdge(entry.getKey(), entry1.getKey());
+                graph1.setEdgeWeight(edge,entry1.getValue());
+            }
+        }
+
+        //创建图形组件
+        JGraphXAdapter<String,DefaultWeightedEdge> adapter = new JGraphXAdapter<>(graph1);
+        //应用圆形布局
+        mxIGraphLayout layout=new mxCircleLayout(adapter);
+        layout.execute(adapter.getDefaultParent());
+
+        // 将布局后的图形添加到 mxGraphComponent 中
+        mxGraphComponent graphComponent = new mxGraphComponent(adapter);
+        graphComponent.zoomAndCenter();
+        graphComponent.setAutoExtend(true);
+        graphComponent.setBounds(300,300,600,600);
+        graphComponent.setGraph(adapter);
+        graphComponent.refresh();
+        // 设置节点的样式
+        Map<String, Object> vertexStyle = new HashMap<>();
+        vertexStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
+        vertexStyle.put(mxConstants.STYLE_FONTCOLOR, "green");
+        vertexStyle.put(mxConstants.STYLE_FILLCOLOR, "white");
+        vertexStyle.put(mxConstants.STYLE_STROKECOLOR, "black");
+        vertexStyle.put(mxConstants.STYLE_STARTSIZE, 500);
+        vertexStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
+        vertexStyle.put(mxConstants.STYLE_FONTSIZE, 13);
+        vertexStyle.put(mxConstants.STYLE_ROUNDED, 1);
+
+        graphComponent.getGraph().getStylesheet().setDefaultVertexStyle(vertexStyle);
+        graphComponent.setGraph(adapter);
+        graphComponent.refresh();
+        //设置边样式
+        Map<String,Object> style = graphComponent.getGraph().getStylesheet().getDefaultEdgeStyle();
+        style.put(mxConstants.STYLE_STROKECOLOR, "green");
+        style.put("edgeStyle",mxEdgeStyle.ElbowConnector);
+        graphComponent.setGraph(adapter);
+        //设置cell样式
+//        Map<String,Object> cellStyle = new HashMap<>();
+//        cellStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+//        cellStyle.put(mxConstants.STYLE_ALIGN,mxConstants.ALIGN_CENTER);
+//        cellStyle.put(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP);
+//        cellStyle.put(mxConstants.STYLE_FILLCOLOR,"#FF9103");
+//        cellStyle.put(mxConstants.STYLE_STROKECOLOR,"#E86A00");
+//        cellStyle.put(mxConstants.STYLE_FONTCOLOR,"#000000");
+//        cellStyle.put(mxConstants.STYLE_ROUNDED, 1);
+//        cellStyle.put(mxConstants.STYLE_OPACITY,"80");
+//        cellStyle.put(mxConstants.STYLE_STARTSIZE,"16");
+//        cellStyle.put(mxConstants.STYLE_FONTSTYLE,1);
+//        cellStyle.put(mxConstants.STYLE_GRADIENTCOLOR,"#F8C48B");
+//        graphComponent.getGraph().getStylesheet().putCellStyle("newcell",cellStyle);
+//        graphComponent.setGraph(adapter);
+
+        //设置总体样式
+
+        graphComponent.refresh();
+        //创建JFrame并添加图形组件
+        JFrame frame = new JFrame("Directed Graph");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(graphComponent);
+        frame.setSize(600, 600);
+        frame.setLocationRelativeTo(null);
+        frame.pack();
+        frame.setVisible(true);
+
+
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.println("选择功能（输入数字）：");

@@ -1,21 +1,35 @@
-import java.awt.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
-
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxEdgeStyle;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Set;
+import javax.swing.JFrame;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-import javax.swing.*;
+
 
 public class Main {
     private static Map<String, Map<String, Integer>> graph;
+
     public static void main(String[] args) {//不会写 全用static
         //读文件
         System.out.println("输入文件名：");
@@ -43,28 +57,28 @@ public class Main {
         //创建图 进入例程
         graph = CreateDirectedGraph(finalString);
 
-        SimpleDirectedWeightedGraph<String, DefaultWeightedEdge> graph1 = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-        for(Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
+        /*SimpleDirectedWeightedGraph<String, DefaultWeightedEdge> graph1 = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+        for (Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
             graph1.addVertex(entry.getKey());
         }
-        for(Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
-            for(Map.Entry<String, Integer> entry1 : entry.getValue().entrySet()) {
+        for (Map.Entry<String, Map<String, Integer>> entry : graph.entrySet()) {
+            for (Map.Entry<String, Integer> entry1 : entry.getValue().entrySet()) {
                 DefaultWeightedEdge edge = graph1.addEdge(entry.getKey(), entry1.getKey());
                 graph1.setEdgeWeight(edge,entry1.getValue());
             }
         }
 
         //创建图形组件
-        JGraphXAdapter<String,DefaultWeightedEdge> adapter = new JGraphXAdapter<>(graph1);
+        JGraphXAdapter<String, DefaultWeightedEdge> adapter = new JGraphXAdapter<>(graph1);
         //应用圆形布局
-        mxIGraphLayout layout=new mxCircleLayout(adapter);
+        mxIGraphLayout layout = new mxCircleLayout(adapter);
         layout.execute(adapter.getDefaultParent());
 
         // 将布局后的图形添加到 mxGraphComponent 中
         mxGraphComponent graphComponent = new mxGraphComponent(adapter);
         graphComponent.zoomAndCenter();
         graphComponent.setAutoExtend(true);
-        graphComponent.setBounds(300,300,600,600);
+        graphComponent.setBounds(300, 300, 600, 600);
         graphComponent.setGraph(adapter);
         graphComponent.refresh();
         // 设置节点的样式
@@ -146,8 +160,7 @@ public class Main {
                         allPaths.forEach((target,path)->{
                             if(path.equals("unreachable")){
                                 System.out.println(source+" to "+target+":unreachable");
-                            }
-                            else{
+                            } else{
                                 System.out.println(source+" to "+target+":"+path);
                             }
                         });
@@ -165,12 +178,12 @@ public class Main {
                     System.out.println("重新输入\n");
                     break;
             }
-        }
+        }*/
     }
     //***Q6
     public static String randomWalk(){//打印fault5
         List<String> list = new ArrayList<>(graph.keySet());
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         String start = list.get(random.nextInt(list.size()));
 
         List<String> visitedEdges = new ArrayList<>();
@@ -270,15 +283,18 @@ public class Main {
         }//打印
     }
     //word1的邻接是否存在并且邻接的邻接是不是word2
-    public static List<String> queryBridgeWords(String word1,String word2){
+    public static List<String> queryBridgeWords(String word1, String word2){
+        word1 = word1.toLowerCase();
+        word2 = word2.toLowerCase();
         List<String> bridgeWords = new ArrayList<>();
-        Map<String,Integer> word1Map = graph.get(word1);
-        if(word1Map == null) {
+        Map<String, Integer> word1Map = graph.get(word1);
+        if (word1Map == null) {
             return bridgeWords;
-        }else{
-            for(String next : word1Map.keySet()){
-                if(graph.containsKey(next)&&graph.get(next).containsKey(word2)) {
-                    bridgeWords.add(next);}
+        } else {
+            for (String next : word1Map.keySet()){
+                if (graph.containsKey(next) && graph.get(next).containsKey(word2)) {
+                    bridgeWords.add(next);
+                }
             }
         }
         return bridgeWords;
@@ -288,7 +304,7 @@ public class Main {
         //this.graph=G.getG();//fault3
         StringBuilder result=new StringBuilder();
         String[]Nwords=inputText.split("\\s+");
-        Random rand=new Random();
+        SecureRandom rand=new SecureRandom();
         for(int i=0;i<Nwords.length-1;i++){
             String word1=Nwords[i];
             String word2=Nwords[i+1];
